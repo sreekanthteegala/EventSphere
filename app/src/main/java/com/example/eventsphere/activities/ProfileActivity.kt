@@ -3,6 +3,7 @@ package com.example.eventsphere.activities
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.eventsphere.databinding.ActivityProfileBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -23,6 +24,21 @@ class ProfileActivity : AppCompatActivity() {
         loadProfile()
 
         binding.tvChangePic.visibility = android.view.View.GONE
+
+        // -- Theme toggle --
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val isDark = prefs.getBoolean("dark_mode", true)
+        binding.switchTheme.isChecked = isDark
+
+        binding.switchTheme.setOnCheckedChangeListener { _, checked ->
+            prefs.edit().putBoolean("dark_mode", checked).apply()
+            AppCompatDelegate.setDefaultNightMode(
+                if (checked) AppCompatDelegate.MODE_NIGHT_YES
+                else AppCompatDelegate.MODE_NIGHT_NO
+            )
+            // Recreate so the whole app re-applies the theme
+            recreate()
+        }
 
         binding.btnLogout.setOnClickListener {
             auth.signOut()

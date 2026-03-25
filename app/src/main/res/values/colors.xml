@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg_dark">#0A0A0F</color>
-    <color name="bg_card">#12121A</color>
-    <color name="bg_surface">#1A1A2E</color>
+    <!-- Surfaces -->
+    <color name="bg_dark">#F5F3FF</color>          <!-- page background -->
+    <color name="bg_card">#FFFFFF</color>           <!-- card background -->
+    <color name="bg_surface">#EDE9FE</color>        <!-- subtle surface -->
+
+    <!-- Brand / Accent -->
     <color name="accent_purple">#7C3AED</color>
     <color name="accent_pink">#EC4899</color>
-    <color name="accent_light">#A78BFA</color>
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#9CA3AF</color>
-    <color name="text_hint">#4B5563</color>
-    <color name="success">#10B981</color>
-    <color name="error">#EF4444</color>
+    <color name="accent_light">#6D28D9</color>      <!-- pressed / link -->
+
+    <!-- Text -->
+    <color name="text_primary">#1F1F2E</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="text_hint">#9CA3AF</color>
+
+    <!-- Semantic -->
+    <color name="success">#059669</color>
+    <color name="error">#DC2626</color>
+
+    <!-- Dividers / Borders -->
+    <color name="border">#DDD6FE</color>
+
+    <!-- Status / Nav bars -->
+    <color name="status_bar">#F5F3FF</color>
 </resources>

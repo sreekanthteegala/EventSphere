@@ -1,14 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg_dark">#0A0A0F</color>
-    <color name="bg_card">#12121A</color>
-    <color name="bg_surface">#1A1A2E</color>
-    <color name="accent_purple">#7C3AED</color>
-    <color name="accent_pink">#EC4899</color>
-    <color name="accent_light">#A78BFA</color>
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#9CA3AF</color>
-    <color name="text_hint">#4B5563</color>
-    <color name="success">#10B981</color>
-    <color name="error">#EF4444</color>
+    <style name="Theme.EventSphere" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/accent_purple</item>
+        <item name="colorPrimaryVariant">@color/bg_surface</item>
+        <item name="colorOnPrimary">@color/text_primary</item>
+        <item name="android:windowBackground">@color/bg_dark</item>
+        <item name="colorSurface">@color/bg_card</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:statusBarColor">@color/status_bar</item>
+        <item name="android:navigationBarColor">@color/bg_dark</item>
+        <item name="colorControlActivated">@color/accent_purple</item>
+        <item name="colorControlHighlight">@color/bg_surface</item>
+    </style>
 </resources>

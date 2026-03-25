@@ -6,102 +6,108 @@
     android:layout_height="match_parent"
     android:background="@color/bg_dark">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBar"
+    <!-- Sticky top bar -->
+    <LinearLayout
+        android:id="@+id/layoutHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:background="@color/bg_dark"
-        app:elevation="0dp">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="52dp"
+        android:paddingBottom="12dp"
+        android:elevation="4dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/tvAppName"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="EventSphere"
-                android:textColor="@color/text_primary"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="EventSphere"
+                    android:textColor="@color/text_primary"
+                    android:textSize="24sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Discover events near you"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp"/>
+            </LinearLayout>
+
+            <!-- Dark/Light toggle -->
+            <ImageView
+                android:id="@+id/ivThemeToggle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/ic_menu_day"
+                android:background="@drawable/card_background"
+                android:padding="8dp"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="Toggle theme"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/ivProfile"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_person"
-                app:civ_border_color="@color/accent_purple"
+                android:src="@drawable/ic_profile"
                 app:civ_border_width="2dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <!-- Search Bar -->
-            <EditText
-                android:id="@+id/etSearch"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:hint="🔍  Search events..."
-                android:textColor="@color/text_primary"
-                android:textColorHint="@color/text_hint"
-                android:background="@drawable/input_background"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:imeOptions="actionSearch"
-                android:inputType="text"/>
-
-            <!-- Section Header -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Upcoming Events"
-                android:textColor="@color/text_primary"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="12dp"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvEvents"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"/>
-
+                app:civ_border_color="@color/accent_purple"/>
         </LinearLayout>
 
-    </androidx.core.widget.NestedScrollView>
+        <!-- Search bar -->
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="🔍  Search events..."
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
+            android:background="@drawable/input_background"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:layout_marginTop="14dp"
+            android:singleLine="true"/>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    </LinearLayout>
+
+    <!-- Events list -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvEvents"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="200dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="80dp"
+        android:clipToPadding="false"
+        android:scrollbarStyle="outsideOverlay"/>
+
+    <!-- FAB -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabCreate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
         android:layout_margin="20dp"
-        android:text="Create Event"
-        android:textColor="@color/text_primary"
-        app:icon="@drawable/ic_add"
-        app:iconTint="@color/text_primary"
+        android:src="@drawable/ic_add"
+        android:contentDescription="Create event"
         app:backgroundTint="@color/accent_purple"
-        android:layout_gravity="bottom|end"/>
+        app:tint="@android:color/white"
+        app:elevation="6dp"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

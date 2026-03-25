@@ -62,6 +62,11 @@ dependencies {
 
     // Circle ImageView
     implementation("de.hdodenhof:circleimageview:3.1.0")
+    // Firebase Storage (for image upload)
+    implementation("com.google.firebase:firebase-storage-ktx")
+
+    // Image compression before upload
+    implementation("id.zelory:compressor:3.0.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

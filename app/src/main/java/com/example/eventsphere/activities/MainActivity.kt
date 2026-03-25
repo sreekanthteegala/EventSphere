@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +27,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // ← Ask for notification permission on Android 13+
         askNotificationPermission()
 
         adapter = EventAdapter(eventList) { event ->
@@ -45,6 +45,19 @@ class MainActivity : AppCompatActivity() {
 
         binding.ivProfile.setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
+        }
+
+        // Quick theme toggle from the header icon
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        binding.ivThemeToggle.setOnClickListener {
+            val isDark = prefs.getBoolean("dark_mode", true)
+            val newMode = !isDark
+            prefs.edit().putBoolean("dark_mode", newMode).apply()
+            AppCompatDelegate.setDefaultNightMode(
+                if (newMode) AppCompatDelegate.MODE_NIGHT_YES
+                else AppCompatDelegate.MODE_NIGHT_NO
+            )
+            recreate()
         }
 
         binding.etSearch.setOnEditorActionListener { _, _, _ ->
@@ -94,5 +107,3 @@ class MainActivity : AppCompatActivity() {
         adapter.updateList(filtered)
     }
 }
-
-
