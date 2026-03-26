@@ -60,8 +60,10 @@ class CreateEventActivity : AppCompatActivity() {
         }
 
         showLoading(true)
-        val uid = auth.currentUser!!.uid
-
+        val uid = auth.currentUser?.uid ?: run {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+            return
+        }
         db.collection("users").document(uid).get().addOnSuccessListener { userDoc ->
             val organizerName = userDoc.getString("name") ?: "Unknown"
             val event = Event(

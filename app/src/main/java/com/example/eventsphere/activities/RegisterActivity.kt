@@ -38,7 +38,11 @@ class RegisterActivity : AppCompatActivity() {
             showLoading(true)
             auth.createUserWithEmailAndPassword(email, pass)
                 .addOnSuccessListener { result ->
-                    val uid = result.user!!.uid
+                    val uid = result.user?.uid ?: run {
+                        showLoading(false)
+                        Toast.makeText(this, "User creation failed", Toast.LENGTH_SHORT).show()
+                        return@addOnSuccessListener
+                    }
                     FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
                         val user = User(uid = uid, name = name, email = email, fcmToken = token)
                         db.collection("users").document(uid).set(user)

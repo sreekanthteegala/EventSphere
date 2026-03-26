@@ -37,9 +37,9 @@ class EventDetailActivity : AppCompatActivity() {
         db.collection("events").document(eventId).addSnapshotListener { snap, _ ->
             snap ?: return@addSnapshotListener
             val event = snap.toObject(Event::class.java) ?: return@addSnapshotListener
-            val uid   = auth.currentUser?.uid ?: ""
+            val uid = auth.currentUser?.uid
 
-            hasRsvp = event.rsvpList.contains(uid)
+            hasRsvp = uid != null && event.rsvpList.contains(uid)
 
             binding.tvTitle.text       = event.title
             binding.tvCategory.text    = event.category
@@ -58,7 +58,10 @@ class EventDetailActivity : AppCompatActivity() {
     }
 
     private fun toggleRsvp() {
-        val uid = auth.currentUser?.uid ?: return
+        val uid = auth.currentUser?.uid ?: run {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+            return
+        }
         val ref = db.collection("events").document(eventId)
 
         if (hasRsvp) {
