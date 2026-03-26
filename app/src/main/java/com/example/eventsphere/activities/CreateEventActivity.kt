@@ -64,30 +64,40 @@ class CreateEventActivity : AppCompatActivity() {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
             return
         }
-        db.collection("users").document(uid).get().addOnSuccessListener { userDoc ->
-            val organizerName = userDoc.getString("name") ?: "Unknown"
-            val event = Event(
-                title = title,
-                description = desc,
-                location = location,
-                date = date,
-                time = time,
-                category = category,
-                imageUrl = "",
-                organizerId = uid,
-                organizerName = organizerName
-            )
-            db.collection("events").add(event)
-                .addOnSuccessListener {
-                    showLoading(false)
-                    Toast.makeText(this, "Event published! 🎉", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-                .addOnFailureListener {
-                    showLoading(false)
-                    Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
-                }
-        }
+        db.collection("users").document(uid).get()
+            .addOnSuccessListener { userDoc ->
+                val organizerName = userDoc.getString("name") ?: "Unknown"
+
+                val event = Event(
+                    title = title,
+                    description = desc,
+                    location = location,
+                    date = date,
+                    time = time,
+                    category = category,
+                    imageUrl = "",
+                    organizerId = uid,
+                    organizerName = organizerName
+                )
+
+                val docRef = db.collection("events").document()
+                val eventWithId = event.copy(id = docRef.id)
+
+                docRef.set(eventWithId)
+                    .addOnSuccessListener {
+                        showLoading(false)
+                        Toast.makeText(this, "Event published! 🎉", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                    .addOnFailureListener {
+                        showLoading(false)
+                        Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .addOnFailureListener {
+                showLoading(false)
+                Toast.makeText(this, "Failed to load user data", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun showLoading(show: Boolean) {
