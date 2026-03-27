@@ -4,7 +4,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
@@ -13,16 +13,14 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eventsphere.adapters.EventAdapter
 import com.example.eventsphere.databinding.ActivityMainBinding
-import com.example.eventsphere.models.Event
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import com.example.eventsphere.viewmodel.EventViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val db = FirebaseFirestore.getInstance()
-    private val eventList = mutableListOf<Event>()
     private lateinit var adapter: EventAdapter
+
+    private val viewModel: EventViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         askNotificationPermission()
 
         // RecyclerView setup
-        adapter = EventAdapter(eventList) { event ->
+        adapter = EventAdapter(mutableListOf()) { event ->
             val intent = Intent(this, EventDetailActivity::class.java)
             intent.putExtra("eventId", event.id)
             startActivity(intent)
@@ -41,14 +39,26 @@ class MainActivity : AppCompatActivity() {
         binding.rvEvents.layoutManager = LinearLayoutManager(this)
         binding.rvEvents.adapter = adapter
 
-        loadEvents()
+        // 🔥 Observe data from ViewModel
+        viewModel.events.observe(this) { list ->
+            adapter.updateList(list)
+        }
 
-        // Create Event button
+        // 🔥 Load events
+        viewModel.loadEvents()
+
+        // 🔍 Real-time search
+        binding.etSearch.addTextChangedListener {
+            val query = it.toString().trim()
+            viewModel.searchEvents(query)
+        }
+
+        // Create Event
         binding.fabCreate.setOnClickListener {
             startActivity(Intent(this, CreateEventActivity::class.java))
         }
 
-        // Profile button
+        // Profile
         binding.ivProfile.setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
         }
@@ -65,12 +75,6 @@ class MainActivity : AppCompatActivity() {
                 else AppCompatDelegate.MODE_NIGHT_NO
             )
             recreate()
-        }
-
-        // 🔥 REAL-TIME SEARCH
-        binding.etSearch.addTextChangedListener { editable ->
-            val query = editable.toString().trim()
-            searchEvents(query)
         }
     }
 
@@ -89,50 +93,5 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
-    }
-
-    // 📥 Load all events
-    private fun loadEvents() {
-        db.collection("events")
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-            .addSnapshotListener { snap, _ ->
-                snap ?: return@addSnapshotListener
-                eventList.clear()
-
-                for (doc in snap) {
-                    val event = doc.toObject(Event::class.java).copy(id = doc.id)
-                    eventList.add(event)
-                }
-
-                adapter.notifyDataSetChanged()
-            }
-    }
-
-    // 🔍 Firestore Search
-    private fun searchEvents(query: String) {
-        if (query.isEmpty()) {
-            loadEvents()
-            return
-        }
-
-        db.collection("events")
-            .orderBy("title", Query.Direction.ASCENDING)
-            .startAt(query)
-            .endAt(query + "\uf8ff")
-            .get()
-            .addOnSuccessListener { snap ->
-                val list = snap.documents.mapNotNull { doc ->
-                    doc.toObject(Event::class.java)?.copy(id = doc.id)
-                }
-
-                if (list.isEmpty()) {
-                    Toast.makeText(this, "No events found", Toast.LENGTH_SHORT).show()
-                }
-
-                adapter.updateList(list)
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Search failed. Check internet.", Toast.LENGTH_SHORT).show()
-            }
     }
 }
